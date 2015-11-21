@@ -1,5 +1,5 @@
 from decimal import Decimal
-from General.Common import WarningMsg, ErrorMsg, TWOPLACES, setContext
+from General.Common import WarningMsg, ErrorMsg, TWOPLACES, setContext, DEBT_KEY
 from General.Menu import Menu
 
 class Allocation:
@@ -137,10 +137,18 @@ class Allocation:
 		for subAlloc in self.subAllocs:
 			subAlloc.status()
 			totalPercent += subAlloc.percent
-		print '\tExtra: ${0}'.format(self.extraMoney.quantize(TWOPLACES))
+		if self.category != DEBT_KEY:
+			print '\tExtra: ${0}'.format(self.extraMoney.quantize(TWOPLACES))
+		else:
+			print '\tDebt: ${0}'.format(self.debt.quantize(TWOPLACES))
 		print '\tPercent allocated to savings: {0}/100%'.format((totalPercent * 100).quantize(TWOPLACES))
 
 	def _updateAlloc(self):
+		pass
+
+	def _collectSubAllocDebt(self):
+		#for subAlloc in self.subAllocs:
+		#	pass
 		pass
 
 	###################################################################################################

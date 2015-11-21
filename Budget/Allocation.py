@@ -15,6 +15,7 @@ class Allocation:
 		self.totalCost = None if totalCost == None else Decimal(totalCost)
 		# If there are no suballocations then everything goes into extra money 
 		self.extraMoney = Decimal("0.00")
+		self.debt = Decimal("0.00")
 		self.subAllocs = []
 
 	###################################################################################################
@@ -55,18 +56,20 @@ class Allocation:
 		if amount <= Decimal("0.00"):
 			return amount # Nothing to withdraw
 		if not self._isSubAlloc:
-			amount = self._withdrawAlloc(amount)
+			self._withdrawAlloc(amount)
+			'''
 			if amount < Decimal("0.00"):
 				# TODO: FIX
 				WarningMsg("Withdrew more than in allocation, taking ${0} out of extra reserve!".format(-1 * amount))
 				if self.extraMoney > Decimal("0.00"):
 					self._withdrawFromExtra(-1 * amount)
+			'''
 		# If this is a suballocation deposit it directly
 		else:
 			# If amount comes back negative than we handle it in the main allocation
-			amount = self._withdrawSubAlloc(amount)
+			self._withdrawSubAlloc(amount)
 
-		return amount
+		return self.debt if self.debt < Decimal("0.00") else self.extraMoney
 
 	def status(self):
 		'''
@@ -116,20 +119,17 @@ class Allocation:
 			print "What suballocation did you spend the money on?"
 			choice = menu.run()
 		else:
-			# Just withdraw directly
-			if amount > self.extraMoney:
-				debt = self.extraMoney - amount
-				self.extraMoney = Decimal("0.00")
-				return debt
-			else:
-				self._withdrawFromExtra(amount)
+			amount = self._withdrawFromExtra(amount)
 		return amount
 
 	def _withdrawFromExtra(self, amount):
-		self.extraMoney -= amount
-		if self.extraMoney < Decimal("0.00"):
-			# Raise an exception here instead of aborting incase we are in a sandbox and the sandbox
-			ErrorMsg("The allocation \"{0}\" has gone into debt, you owe ${1}! The program is ending now for you to resolve this!".format(self.category, self.extraMoney))
+		if amount > self.extraMoney:
+			self.debt += self.extraMoney - amount
+			self.extraMoney = Decimal("0.00")
+			return self.debt
+		else:
+			self.extraMoney -= amount
+		return self.extraMoney
 
 	def _statusAlloc(self):
 		totalPercent = Decimal("0.00")
@@ -157,9 +157,9 @@ class Allocation:
 
 	def _withdrawSubAlloc(self, amount):
 		if amount > self.savings:
-			debt = self.savings - amount
+			self.debt = self.savings - amount
 			self.savings = Decimal("0.00")
-			return debt
+			return self.debt
 		else:
 			self.savings -= amount
 		return self.savings

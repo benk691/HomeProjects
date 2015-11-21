@@ -1,6 +1,6 @@
 from decimal import Decimal
 from Allocation import Allocation
-from General.Common import ErrorMsg, EXTRA_KEY, DEBT_KEY, TWOPLACES, setContext
+from General.Common import ErrorMsg, WarningMsg, EXTRA_KEY, DEBT_KEY, TWOPLACES, setContext
 from General.Menu import Menu
 
 class AllocationManager:
@@ -49,10 +49,13 @@ class AllocationManager:
 		choice = self.withdrawMenu.run()
 		if choice != 'q':
 			amount = Decimal(raw_input("How much money did you spend? "))
-			if amount <= Decimal("0.00"):
-				return
 			cat = self.withdrawMenuList[choice - 1]
-			self.allocationMap[cat].withdraw(amount)
+			amount = self.allocationMap[cat].withdraw(amount)
+			print "Amount = {0}".format(amount)
+			if amount < Decimal("0.00"):
+				# We are in debt here
+				self.allocationMap[DEBT_KEY].debt += amount
+				WarningMsg("You have accumulated a debt of ${0}!".format(self.allocationMap[DEBT_KEY].debt.quantize(TWOPLACES)))
 
 	def status(self):
 		totalPercent = Decimal("0.00")

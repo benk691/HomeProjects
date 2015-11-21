@@ -1,9 +1,9 @@
 import os
 import os.path
 import random
-from Color import Color
+from General.Color import Color
 
-showsPath = "./Text Files/"
+showsPath = "./TextFiles/"
 watchedFile = showsPath + "watched.txt"
 movieKey = 'M'
 seriesKey = 'S'

@@ -1,7 +1,7 @@
 import copy
 from decimal import Decimal
-from Menu import Menu
-from Color import Color
+from General.Menu import Menu
+from General.Color import Color
 
 class MoneySandbox:
 	def __init__(self, moneyManager):

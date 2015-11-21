@@ -1,6 +1,6 @@
 from decimal import Decimal
-from Common import WarningMsg, ErrorMsg, TWOPLACES, setContext
-from Menu import Menu
+from General.Common import WarningMsg, ErrorMsg, TWOPLACES, setContext
+from General.Menu import Menu
 
 class Allocation:
 	def __init__(self, cat, percent, priority, product=None, savings=None, totalCost=None, isSubAlloc=False):

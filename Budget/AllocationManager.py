@@ -1,7 +1,7 @@
 from decimal import Decimal
 from Allocation import Allocation
-from Common import ErrorMsg, EXTRA_KEY, DEBT_KEY, TWOPLACES, setContext
-from Menu import Menu
+from General.Common import ErrorMsg, EXTRA_KEY, DEBT_KEY, TWOPLACES, setContext
+from General.Menu import Menu
 
 class AllocationManager:
 	def __init__(self, allocationPath):

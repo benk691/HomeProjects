@@ -1,5 +1,5 @@
 from decimal import Decimal
-from General.Common import WarningMsg, ErrorMsg, TWOPLACES, setContext, DEBT_KEY
+from General.Common import DebugMsg, WarningMsg, ErrorMsg, TWOPLACES, setContext, DEBT_KEY
 from General.Menu import Menu
 
 class Allocation:
@@ -15,7 +15,10 @@ class Allocation:
 		self.totalCost = None if totalCost == None else Decimal(totalCost)
 		# If there are no suballocations then everything goes into extra money 
 		self.extraMoney = Decimal("0.00")
+		# This is the total accumulated debt
 		self.debt = Decimal("0.00")
+		# This is the actual debt of a category in terms of overspending on the extra category
+		self.debtReg = Decimal("0.00")
 		self.subAllocs = []
 
 	###################################################################################################
@@ -57,13 +60,7 @@ class Allocation:
 			return amount # Nothing to withdraw
 		if not self._isSubAlloc:
 			self._withdrawAlloc(amount)
-			'''
-			if amount < Decimal("0.00"):
-				# TODO: FIX
-				WarningMsg("Withdrew more than in allocation, taking ${0} out of extra reserve!".format(-1 * amount))
-				if self.extraMoney > Decimal("0.00"):
-					self._withdrawFromExtra(-1 * amount)
-			'''
+			self._calculateDebt()
 		# If this is a suballocation deposit it directly
 		else:
 			# If amount comes back negative than we handle it in the main allocation
@@ -88,6 +85,12 @@ class Allocation:
 			self._updateAlloc()
 		else:
 			self._updateSubAlloc()
+
+	def _calculateDebt(self):
+		self.debt = self.debtReg
+		for subAlloc in self.subAllocs:
+			self.debt += subAlloc._calculateDebt()
+		return self.debt
 
 	###################################################################################################
 	#                                ALLOCATION FUNCTIONS                                             #
@@ -124,9 +127,9 @@ class Allocation:
 
 	def _withdrawFromExtra(self, amount):
 		if amount > self.extraMoney:
-			self.debt += self.extraMoney - amount
+			self.debtReg += self.extraMoney - amount
 			self.extraMoney = Decimal("0.00")
-			return self.debt
+			return self.debtReg
 		else:
 			self.extraMoney -= amount
 		return self.extraMoney
@@ -146,11 +149,6 @@ class Allocation:
 	def _updateAlloc(self):
 		pass
 
-	def _collectSubAllocDebt(self):
-		#for subAlloc in self.subAllocs:
-		#	pass
-		pass
-
 	###################################################################################################
 	#                               SUBALLOCATION FUNCTIONS                                           #
 	###################################################################################################
@@ -165,9 +163,9 @@ class Allocation:
 
 	def _withdrawSubAlloc(self, amount):
 		if amount > self.savings:
-			self.debt = self.savings - amount
+			self.debtReg += self.savings - amount
 			self.savings = Decimal("0.00")
-			return self.debt
+			return self.debtReg
 		else:
 			self.savings -= amount
 		return self.savings

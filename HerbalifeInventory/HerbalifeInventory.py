@@ -1,5 +1,6 @@
 import decimal
 from decimal import Decimal, Context
+from General.Menu import Menu
 from General.Color import Color
 
 inventoryPath = "./TextFiles/HerbalifeInventory.csv"
@@ -28,8 +29,18 @@ def readInventory():
 			inventoryTable.update({product : subTable})
 	return inventoryTable
 
+def decStr(value):
+	return value.quantize(TWOPLACES)
+
 def writeInventory(inventoryTable):
-	pass
+	with open(inventoryPath, 'w') as iFile:
+		iFile.write("Product,Quantity,Quantity/Meal,Meal/Day,Days Left\n")
+		for product in inventoryTable:
+			quantity = inventoryTable[product][quantityKey]
+			qPerM = inventoryTable[product][quantityPerMealKey]
+			mPerD = inventoryTable[product][mealPerDayKey]
+			days = inventoryTable[product][daysLeftkey]
+			iFile.write("{0},{1},{2},{3},{4}\n".format(product, decStr(quantity), decStr(qPerM), decStr(mPerD), decStr(days)))
 
 def calculateDaysLeft(inventoryTable):
 	for product in inventoryTable:
@@ -66,10 +77,20 @@ def status(inventoryTable):
 			info = "{0}{1}(LOW!){2}".format(Color.BLINKING, Color.YELLOW, Color.END)
 		print "{0}: Days Left = {1} {2}".format(product, inventoryTable[product][daysLeftkey].quantize(TWOPLACES), info)
 
+def createMenu(inventoryTable):
+	menu = Menu(writeInventory, inventoryTable)
+	menu.addOption("Status", status, inventoryTable)
+	menu.addOption("Daily Deduction", dailyUsage, inventoryTable)
+	return menu
+
+def run(inventoryTable):
+	menu = createMenu(inventoryTable)
+	while menu.run() != 'q' : pass
+
 def main():
 	decimal.setcontext(invContext)
 	inventoryTable = readInventory()
-	status(inventoryTable)
+	run(inventoryTable)
 	return 0
 
 if __name__ == "__main__":

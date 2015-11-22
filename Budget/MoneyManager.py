@@ -1,6 +1,6 @@
 from decimal import Decimal
 from AllocationManager import AllocationManager
-from General.Common import TWOPLACES, setContext
+from General.Common import TWOPLACES, setContext, DEBT_KEY
 
 class MoneyManager:
 	def __init__(self, moneyPath, allocationPath, savingsPath):
@@ -46,7 +46,11 @@ class MoneyManager:
 				if i == 0:
 					continue
 				category, money = mlines[i].strip().split(',')
-				self.allocationManager.allocationMap[category].extraMoney = Decimal(money)
+				if category != DEBT_KEY:
+					self.allocationManager.allocationMap[category].extraMoney = Decimal(money)
+				else:
+					self.allocationManager.allocationMap[category].debt = Decimal(money)
+					self.allocationManager.allocationMap[category].debtReg = Decimal(money)
 
 	def _readSavings(self):
 		'''
@@ -64,7 +68,10 @@ class MoneyManager:
 		with open(self._moneyPath, 'w') as mFile:
 			mFile.write("Category,Money\n")
 			for cat in self.allocationManager.allocationMap:
-				mFile.write("{0},{1}\n".format(cat, self.allocationManager.allocationMap[cat].extraMoney.quantize(TWOPLACES)))
+				if cat != DEBT_KEY:
+					mFile.write("{0},{1}\n".format(cat, self.allocationManager.allocationMap[cat].extraMoney.quantize(TWOPLACES)))
+				else:
+					mFile.write("{0},{1}\n".format(cat, self.allocationManager.allocationMap[cat].debt.quantize(TWOPLACES)))
 
 	def _writeSavings(self):
 		with open(self._savingsPath, 'w') as sFile:

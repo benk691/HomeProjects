@@ -6,6 +6,11 @@ TWOPLACES = Decimal('0.01')
 EXTRA_KEY = 'Extra'
 DEBT_KEY = 'Debt'
 
+def DebugMsg(msg):
+	print "{0}{1}DEBUG:{2} {3}{4}{5}".format(Color.BLINKING, Color.PURPLE, Color.END, Color.PURPLE, msg, Color.END)
+
+def InfoMsg(msg):
+	print "{0}{1}INFO:{2} {3}{4}{5}".format(Color.BLINKING, Color.CYAN, Color.END, Color.CYAN, msg, Color.END)
 
 def WarningMsg(msg):
 	print "{0}{1}WARNING:{2} {3}{4}{5}".format(Color.BLINKING, Color.YELLOW, Color.END, Color.YELLOW, msg, Color.END)

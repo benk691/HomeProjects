@@ -1,6 +1,6 @@
 from decimal import Decimal
 from Allocation import Allocation
-from General.Common import ErrorMsg, EXTRA_KEY, DEBT_KEY, TWOPLACES, setContext
+from General.Common import DebugMsg, ErrorMsg, WarningMsg, InfoMsg, EXTRA_KEY, DEBT_KEY, TWOPLACES, setContext
 from General.Menu import Menu
 
 class AllocationManager:
@@ -19,7 +19,8 @@ class AllocationManager:
 	def deposit(self, amount):
 		if amount <= Decimal("0.00"):
 			return
-		currentAmount = amount
+		# Handle debt first
+		currentAmount = self._handleDebt(amount)
 		for cat in self.allocationMap:
 			deduction = amount * self.allocationMap[cat].percent
 			retAmount = Decimal("0.00")
@@ -48,11 +49,16 @@ class AllocationManager:
 		print "What did you spend money on?"
 		choice = self.withdrawMenu.run()
 		if choice != 'q':
-			amount = Decimal(raw_input("How much money did you spend? "))
-			if amount <= Decimal("0.00"):
-				return
 			cat = self.withdrawMenuList[choice - 1]
-			self.allocationMap[cat].withdraw(amount)
+			if cat == DEBT_KEY:
+				WarningMsg("You can not withdraw money from your debt!")
+				return
+			amount = Decimal(raw_input("How much money did you spend? "))
+			amount = self.allocationMap[cat].withdraw(amount)
+			if amount < Decimal("0.00"):
+				# We are in debt here so recalculate the total debt
+				self._calculateDebt()
+				WarningMsg("You have accumulated a debt of ${0}!".format(self.allocationMap[DEBT_KEY].debt.quantize(TWOPLACES)))
 
 	def status(self):
 		totalPercent = Decimal("0.00")
@@ -67,6 +73,27 @@ class AllocationManager:
 
 	def finalize(self):
 		self._writeAllocations()
+
+	def _handleDebt(self, amount):
+		if self.allocationMap[DEBT_KEY].debt < Decimal("0.00"):
+			debt = self.allocationMap[DEBT_KEY].debt
+			posDebt = self.allocationMap[DEBT_KEY].debt * -1
+			if posDebt > amount:
+				ErrorMsg("You have accumulated more debt than you have deposited! You need ${0} more to resolve your debt!".format(((debt + amount) * -1).quantize(TWOPLACES)))
+			amount += self.allocationMap[DEBT_KEY].debt
+			self.allocationMap[DEBT_KEY].debt = Decimal("0.00")
+			InfoMsg("Debt resolved. Depositing ${0}.".format(amount.quantize(TWOPLACES)))
+		return amount
+
+	def _calculateDebt(self):
+		'''
+		This functino is needed because the debt might occur in the same allocation twice and this will
+		resolve that issue by calculating the debt from 0.
+		'''
+		self.allocationMap[DEBT_KEY].debt = self.allocationMap[DEBT_KEY].debtReg
+		for cat in self.allocationMap:
+			if cat != DEBT_KEY:
+				self.allocationMap[DEBT_KEY].debt += self.allocationMap[cat].debt
 
 	def _createWithdrawMenu(self):
 		for cat in self.allocationMap:

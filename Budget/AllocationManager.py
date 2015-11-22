@@ -20,7 +20,8 @@ class AllocationManager:
 		if amount <= Decimal("0.00"):
 			return
 		# Handle debt first
-		currentAmount = self._handleDebt(amount)
+		amount = self._handleDebt(amount)
+		currentAmount = amount
 		for cat in self.allocationMap:
 			deduction = amount * self.allocationMap[cat].percent
 			retAmount = Decimal("0.00")

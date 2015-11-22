@@ -1,6 +1,6 @@
 from decimal import Decimal
 from AllocationManager import AllocationManager
-from General.Common import TWOPLACES, setContext, DEBT_KEY
+from General.Common import DebugMsg, TWOPLACES, setContext, DEBT_KEY
 
 class MoneyManager:
 	def __init__(self, moneyPath, allocationPath, savingsPath):

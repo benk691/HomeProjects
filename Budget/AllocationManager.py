@@ -77,13 +77,17 @@ class AllocationManager:
 
 	def _handleDebt(self, amount):
 		if self.allocationMap[DEBT_KEY].debt < Decimal("0.00"):
-			debt = self.allocationMap[DEBT_KEY].debt
 			posDebt = self.allocationMap[DEBT_KEY].debt * -1
 			if posDebt > amount:
-				ErrorMsg("You have accumulated more debt than you have deposited! You need ${0} more to resolve your debt!".format(((debt + amount) * -1).quantize(TWOPLACES)))
-			amount += self.allocationMap[DEBT_KEY].debt
-			self.allocationMap[DEBT_KEY].debt = Decimal("0.00")
-			InfoMsg("Debt resolved. Depositing ${0}.".format(amount.quantize(TWOPLACES)))
+				self.allocationMap[DEBT_KEY].debt += amount
+				self.allocationMap[DEBT_KEY].debtReg += amount
+				amount = Decimal("0.00")
+				WarningMsg("The deposited amount did not resolve your debt! You still have a debt of ${0}!".format(self.allocationMap[DEBT_KEY].debt.quantize(TWOPLACES)))
+			else:
+				amount += self.allocationMap[DEBT_KEY].debt
+				self.allocationMap[DEBT_KEY].debt = Decimal("0.00")
+				self.allocationMap[DEBT_KEY].debtReg = Decimal("0.00")
+				InfoMsg("Debt resolved. Depositing ${0}.".format(amount.quantize(TWOPLACES)))
 		return amount
 
 	def _calculateDebt(self):

@@ -49,7 +49,7 @@ def calculateDaysLeft(inventoryTable):
 		mPerD = inventoryTable[product][mealPerDayKey]
 		if quantity == 0 or qPerM == 0 or mPerD == 0:
 			# This will result in 0 or divide by 0 error so default it to 0
-			inventoryTable[product][daysLeftkey] = Decimal("0.00")
+			inventoryTable[product][daysLeftkey] = quantity
 			continue
 		inventoryTable[product][daysLeftkey] = quantity / (qPerM * mPerD)
 
@@ -72,9 +72,9 @@ def status(inventoryTable):
 	for product in inventoryTable:
 		info = ""
 		if inventoryTable[product][daysLeftkey] == Decimal("0.00"):
-			info = "{0}{1}(EMPTY!){2}".format(Color.BLINKING, Color.RED, Color.END)
+			info = "{0}(EMPTY!){1}".format(Color.RED, Color.END)
 		elif inventoryTable[product][daysLeftkey] <= Decimal("10.00"):
-			info = "{0}{1}(LOW!){2}".format(Color.BLINKING, Color.YELLOW, Color.END)
+			info = "{0}(LOW!){1}".format(Color.YELLOW, Color.END)
 		print "{0}: Days Left = {1} {2}".format(product, inventoryTable[product][daysLeftkey].quantize(TWOPLACES), info)
 
 def createMenu(inventoryTable):

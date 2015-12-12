@@ -86,6 +86,12 @@ class Allocation:
 		else:
 			self._updateSubAlloc()
 
+	def calculateSavings(self):
+		if not self._isSubAlloc:
+			return self._calculateSavingsAlloc()
+		else:
+			return self._calculateSavingsSubAlloc()
+
 	def _calculateDebt(self):
 		self.debt = self.debtReg
 		for subAlloc in self.subAllocs:
@@ -149,6 +155,16 @@ class Allocation:
 	def _updateAlloc(self):
 		pass
 
+	def _calculateSavingsAlloc(self):
+		savings = Decimal("0.00")
+		if self.category != DEBT_KEY:
+			savings = self.extraMoney
+			for subAlloc in self.subAllocs:
+				savings += subAlloc.calculateSavings()
+		else:
+			savings = self.debt
+		return savings
+
 	###################################################################################################
 	#                               SUBALLOCATION FUNCTIONS                                           #
 	###################################################################################################
@@ -176,6 +192,9 @@ class Allocation:
 
 	def _updateSubAlloc(self):
 		pass
+
+	def _calculateSavingsSubAlloc(self):
+		return self.savings
 
 	###################################################################################################
 	#                                  SPECIFIC FUNCTIONS                                             #

@@ -72,6 +72,12 @@ class AllocationManager:
 	def update(self):
 		pass
 
+	def calculateSavings(self):
+		savings = Decimal("0.00")
+		for cat in self.allocationMap:
+			savings += self.allocationMap[cat].calculateSavings()
+		return savings
+
 	def finalize(self):
 		self._writeAllocations()
 

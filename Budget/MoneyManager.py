@@ -50,8 +50,11 @@ class MoneyManager:
 			ccName = raw_input("What is the name of one of your credit card accounts? ")
 			creditAccountMoney += (-1 * Decimal(raw_input("How much money do you owe for your {0} account? ".format(ccName))))
 
-		savings = bankAccountMoney + creditAccountMoney
-		InfoMsg("You have a total savings of ${0}.".format(savings.quantize(TWOPLACES)))
+		actualSavings = bankAccountMoney + creditAccountMoney
+		budgetSavings = self.allocationManager.calculateSavings()
+		InfoMsg("Your actual savings are ${0}.".format(actualSavings.quantize(TWOPLACES)))
+		InfoMsg("Your budget savings are ${0}.".format(budgetSavings.quantize(TWOPLACES)))
+		InfoMsg("The difference is ${0}.".format((actualSavings - budgetSavings).quantize(TWOPLACES)))
 
 	def finalize(self):
 		self._writeMoney()

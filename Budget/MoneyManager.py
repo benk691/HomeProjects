@@ -1,6 +1,6 @@
 from decimal import Decimal
 from AllocationManager import AllocationManager
-from General.Common import InfoMsg, DebugMsg, TWOPLACES, setContext, DEBT_KEY
+from General.Common import WarningMsg, InfoMsg, DebugMsg, TWOPLACES, setContext, DEBT_KEY, EXTRA_KEY
 
 class MoneyManager:
 	def __init__(self, moneyPath, allocationPath, savingsPath):
@@ -34,7 +34,9 @@ class MoneyManager:
 
 	def calculateSavings(self):
 		'''
-		Adds the amount in each 
+		Adds the amount in each allocation and compares it with bank holdings and credit debt.
+		The functions takes the difference and puts it into the extra money category if positive, 
+		otherwise adds the amount to your existing debt.
 		'''
 		bankAccountMoney = Decimal("0.00")
 		creditAccountMoney = Decimal("0.00")
@@ -50,11 +52,25 @@ class MoneyManager:
 			ccName = raw_input("What is the name of one of your credit card accounts? ")
 			creditAccountMoney += (-1 * Decimal(raw_input("How much money do you owe for your {0} account? ".format(ccName))))
 
-		actualSavings = bankAccountMoney + creditAccountMoney
-		budgetSavings = self.allocationManager.calculateSavings()
-		InfoMsg("Your actual savings are ${0}.".format(actualSavings.quantize(TWOPLACES)))
-		InfoMsg("Your budget savings are ${0}.".format(budgetSavings.quantize(TWOPLACES)))
-		InfoMsg("The difference is ${0}.".format((actualSavings - budgetSavings).quantize(TWOPLACES)))
+		if bankAccounts > 0 or creditCards > 0:
+			# Calculate your debt before continuing
+			self.allocationManager.calculateDebt()
+			actualSavings = bankAccountMoney + creditAccountMoney
+			budgetSavings = self.allocationManager.calculateSavings()
+			# TODO: Figure out what happens when actual savings is 0
+			diff = actualSavings - budgetSavings
+
+			InfoMsg("Your actual savings are ${0}.".format(actualSavings.quantize(TWOPLACES)))
+			InfoMsg("Your budget savings are ${0}.".format(budgetSavings.quantize(TWOPLACES)))
+			
+			if diff >= Decimal("0.00"):
+				InfoMsg("Adding ${0} to your extra money.".format(diff.quantize(TWOPLACES)))
+				self.allocationManager.allocationMap[EXTRA_KEY].extraMoney += diff
+			else:
+				InfoMsg("Adding ${0} to your debt.".format(diff.quantize(TWOPLACES)))
+				self.allocationManager.allocationMap[DEBT_KEY].debtReg += diff
+				self.allocationManager.calculateDebt()
+				WarningMsg("You have accumulated a debt of ${0}!".format(self.allocationManager.allocationMap[DEBT_KEY].debt.quantize(TWOPLACES)))
 
 	def finalize(self):
 		self._writeMoney()

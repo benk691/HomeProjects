@@ -1,6 +1,6 @@
 from decimal import Decimal
 from AllocationManager import AllocationManager
-from General.Common import DebugMsg, TWOPLACES, setContext, DEBT_KEY
+from General.Common import InfoMsg, DebugMsg, TWOPLACES, setContext, DEBT_KEY
 
 class MoneyManager:
 	def __init__(self, moneyPath, allocationPath, savingsPath):
@@ -12,14 +12,15 @@ class MoneyManager:
 		self._readMoney()
 		self._readSavings()
 
-	def deposit(self):
+	def deposit(self, amount=None):
 		'''
 		Deposits money according to the percentages of all the allocations
 		'''
-		depositAmount = Decimal(raw_input("How much money to deposit? "))
-		self.allocationManager.deposit(depositAmount)
+		if amount == None:
+			amount = Decimal(raw_input("How much money to deposit? "))
+		self.allocationManager.deposit(amount)
 
-	def withdraw(self):
+	def withdraw(self, amount=None):
 		'''
 		Withdraws money out of an allocation and checks if withdrawal is over budget
 		'''
@@ -30,6 +31,27 @@ class MoneyManager:
 
 	def update(self):
 		self.allocationManager.update()
+
+	def calculateSavings(self):
+		'''
+		Adds the amount in each 
+		'''
+		bankAccountMoney = Decimal("0.00")
+		creditAccountMoney = Decimal("0.00")
+		savings = Decimal("0.00")
+		bankAccounts = int(raw_input("How many bank accounts do you have? "))
+		creditCards = int(raw_input("How many credit cards do you have? "))
+
+		for ba in xrange(bankAccounts):
+			baName = raw_input("What is the name of one of your bank accounts? ")
+			bankAccountMoney += Decimal(raw_input("How much money is in your {0} account? ".format(baName)))
+
+		for cc in xrange(creditCards):
+			ccName = raw_input("What is the name of one of your credit card accounts? ")
+			creditAccountMoney += (-1 * Decimal(raw_input("How much money do you owe for your {0} account? ".format(ccName))))
+
+		savings = bankAccountMoney + creditAccountMoney
+		InfoMsg("You have a total savings of ${0}.".format(savings.quantize(TWOPLACES)))
 
 	def finalize(self):
 		self._writeMoney()

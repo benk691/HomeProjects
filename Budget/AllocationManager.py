@@ -17,7 +17,7 @@ class AllocationManager:
 		self.allocationMap[cat].addSubAllocation(cat, product, percent, priority, savings, totalCost)
 
 	def deposit(self, amount):
-		if amount <= Decimal("0.00"):
+		if amount != None and amount <= Decimal("0.00"):
 			return
 		# Handle debt first
 		amount = self._handleDebt(amount)

@@ -25,6 +25,7 @@ def createMenu(moneyManager):
 	menu.addOption('Withdraw', moneyManager.withdraw)
 	menu.addOption('Status', moneyManager.status)
 	menu.addOption('Update', moneyManager.update)
+	menu.addOption('Calculate Savings', moneyManager.calculateSavings)
 	menu.addOption('Create a sandbox', MoneySandbox, moneyManager)
 	return menu
 

@@ -35,7 +35,7 @@ def decStr(value):
 def writeInventory(inventoryTable):
 	with open(inventoryPath, 'w') as iFile:
 		iFile.write("Product,Quantity,Quantity/Meal,Meal/Day,Days Left\n")
-		for product in inventoryTable:
+		for product in sorted(inventoryTable):
 			quantity = inventoryTable[product][quantityKey]
 			qPerM = inventoryTable[product][quantityPerMealKey]
 			mPerD = inventoryTable[product][mealPerDayKey]
@@ -69,11 +69,11 @@ def dailyUsage(inventoryTable):
 def status(inventoryTable):
 	calculateDaysLeft(inventoryTable)
 	print "{0} Status {1}".format('=' * 10, '=' * 10)
-	for product in inventoryTable:
+	for product in sorted(inventoryTable):
 		info = ""
 		if inventoryTable[product][daysLeftkey] == Decimal("0.00"):
 			info = "{0}(EMPTY!){1}".format(Color.RED, Color.END)
-		elif inventoryTable[product][daysLeftkey] <= Decimal("10.00"):
+		elif inventoryTable[product][daysLeftkey] <= Decimal("17.00"):
 			info = "{0}(LOW!){1}".format(Color.YELLOW, Color.END)
 		print "{0}: Days Left = {1} {2}".format(product, inventoryTable[product][daysLeftkey].quantize(TWOPLACES), info)
 

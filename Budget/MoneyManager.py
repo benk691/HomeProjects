@@ -57,7 +57,8 @@ class MoneyManager:
 			self.allocationManager.calculateDebt()
 			actualSavings = bankAccountMoney + creditAccountMoney
 			budgetSavings = self.allocationManager.calculateSavings()
-			# TODO: Figure out what happens when actual savings is 0
+			# This works for all values of actualSavings and budgetSavings.
+			# For more description why look in the wiki
 			diff = actualSavings - budgetSavings
 
 			InfoMsg("Your actual savings are ${0}.".format(actualSavings.quantize(TWOPLACES)))

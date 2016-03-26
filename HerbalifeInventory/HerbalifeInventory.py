@@ -73,7 +73,7 @@ def status(inventoryTable):
 		info = ""
 		if inventoryTable[product][daysLeftkey] == Decimal("0.00"):
 			info = "{0}(EMPTY!){1}".format(Color.RED, Color.END)
-		elif inventoryTable[product][daysLeftkey] <= Decimal("17.00"):
+		elif inventoryTable[product][daysLeftkey] <= Decimal("18.00"):
 			info = "{0}(LOW!){1}".format(Color.YELLOW, Color.END)
 		print "{0}: Days Left = {1} {2}".format(product, inventoryTable[product][daysLeftkey].quantize(TWOPLACES), info)
 

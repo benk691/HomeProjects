@@ -7,6 +7,7 @@ from MoneySandbox import MoneySandbox
 allocationPath = "./TextFiles/allocations.csv"
 moneyPath = "./TextFiles/money.csv"
 savingsPath = "./TextFiles/savings.csv"
+monthlyDeductionsPath = "./TextFiles/deductions.csv"
 catKey = 'Category'
 percentKey = 'Percent'
 priorityKey = 'Priority'

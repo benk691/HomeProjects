@@ -62,7 +62,7 @@ class Repetition:
 		@param t - time
 		'''
 		# Add specified amount of time to the time class passed in
-		time.addTime(self._repTimeStruct.years, self._repTimeStruct.months, 
+		time.changeTime(self._repTimeStruct.years, self._repTimeStruct.months, 
 			self._repTimeStruct.weeks, self._repTimeStruct.days, 
 			self._repTimeStruct.hours, self._repTimeStruct.minutes, 
 			self._repTimeStruct.seconds)

@@ -16,8 +16,22 @@ class Event:
 		@param name - the name of the event
 		'''
 		self.name = name
+		self.executionDate = None
 		self.dateList = []
 		self.actionList = []
+
+	def setExecutionDate(self, timestamp=None):
+		'''
+		Sets the execution date to execute up to so you can run this event 
+		to the future if you need to
+		@param timestamp The timestamp of the date and time this event is to occur
+		if timestamp is None then the current date is used
+		'''
+		if timestamp is None:
+			currentDatetime = datetime.datetime.today()
+			self.executionDate = Time.fromDatetime(currentDatetime)
+		else:
+			self.executionDate = Time(timestamp)
 
 	def execute(self):
 		'''
@@ -27,10 +41,10 @@ class Event:
 		Go through the Times if the time has past then execute its action and perform its repetition
 		until the date has passed the current time
 		'''
-		currentDatetime = datetime.datetime.today()
-		currentDate = Time.fromDatetime(currentDatetime)
+		if self.executionDate is None:
+			self.setExecutionDate()
 		for date in self.dateList:
-			self._performToCompletion(date, currentDate)
+			self._performToCompletion(date)
 
 	def addDate(self, timestamp, repetitionString=None):
 		'''
@@ -66,22 +80,22 @@ class Event:
 		'''
 		self.actionList.append([action, params])
 
-	def _performToCompletion(self, date, currentDate):
+	def _performToCompletion(self, date):
 		'''
 		Performs the actions of the event on a the given date until the repetition has 
 		caught up with the current date or if there is no repetition
-		@param data - the date item from the dateList to perform the event actions on
+		@param date - the date item from the dateList to perform the event actions on
 		'''
 		# Check the repeition flag
 		if date[REP_KEY]:
 			# Keep updating until the date is in the future
-			while date[TIME_KEY] <= currentDate:
+			while date[TIME_KEY] <= self.executionDate:
 				self._performActions()
 				date[REP_KEY].applyRepetition(date[TIME_KEY])
 		else:
-			# Perform the actions for this event once and update the time to the current date
+			# Perform the actions for this event once and update the time to the execution date
 			self._performActions()
-			date[TIME_KEY] = currentDate
+			date[TIME_KEY] = self.executionDate
 
 	def _performActions(self):
 		''' 

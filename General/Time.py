@@ -10,6 +10,17 @@ class Time:
 		self.dateTime = None
 		self._readTimestamp(timestamp)
 
+	@classmethod
+	def fromDatetime(cls, inDatetime):
+		'''
+		Constructs a Time class from a datetime
+		@param timestamp - string in the format of %Y-%m-%d_%H:%M:%S
+		@return Constructed Time class
+		'''
+		timestamp = '%d-%02d-%02d_%02d:%02d:%02d' % (inDatetime.year, inDatetime.month, 
+			inDatetime.day, inDatetime.hour, inDatetime.minute, inDatetime.second)
+		return Time(timestamp)
+
 	def applyTimeDelta(self, weeks=0, days=0, hours=0, minutes=0, seconds=0):
 		'''
 		Applies a time delta with the passed in parameters

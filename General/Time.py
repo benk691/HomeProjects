@@ -96,6 +96,9 @@ class Time:
 	def __eq__(self, rhs):
 		return self.dateTime == rhs.dateTime
 
+	def __ne__(self, rhs):
+		return self.dateTime != rhs.dateTime
+
 	def __lt__(self, rhs):
 		return self.dateTime < rhs.dateTime
 

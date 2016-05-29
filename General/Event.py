@@ -72,13 +72,12 @@ class Event:
 			dateDict.update({ REP_KEY : False })
 		self.dateList.append(dateDict)
 
-	def addAction(self, action, params=[]):
+	def addAction(self, action):
 		'''
 		Adds a function callback taht will be performed everytime the event occurs
-		@param action the function callback
-		@param params A list of the parameters to pass into the callback
+		@param action Action class
 		'''
-		self.actionList.append([action, params])
+		self.actionList.append(action)
 
 	def _performToCompletion(self, date):
 		'''
@@ -102,8 +101,7 @@ class Event:
 		Performs all the actions for this event
 		'''
 		for action in self.actionList:
-			# Call the action function with a list of parameters
-			action[0](*action[1])
+			action.execute()
 
 
 

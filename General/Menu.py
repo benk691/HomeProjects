@@ -1,5 +1,3 @@
-import sys
-
 '''
 Expand to make a yes/no menu for simple yes or no questions
 '''

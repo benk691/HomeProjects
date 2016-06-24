@@ -10,15 +10,17 @@ Creates a scehduled event that can reoccur or only occur once
 '''
 class Event:
 
-	def __init__(self, name):
+	def __init__(self, name, executionDueDate=None):
 		'''
 		Initialize an event instance
 		@param name - the name of the event
+		@param executionDueDate - the timestamp to execute to
 		'''
 		self.name = name
 		self.executionDate = None
 		self.dateList = []
 		self.actionList = []
+		self.setExecutionDate(executionDueDate)
 
 	def setExecutionDate(self, timestamp=None):
 		'''
@@ -102,7 +104,6 @@ class Event:
 		'''
 		for action in self.actionList:
 			action.execute()
-
 
 
 '''

@@ -87,12 +87,13 @@ class MoneyManager:
 			for i in xrange(len(mlines)):
 				if i == 0:
 					continue
-				category, money = mlines[i].strip().split(',')
-				if category != DEBT_KEY:
-					self.allocationManager.allocationMap[category].extraMoney = Decimal(money)
-				else:
-					self.allocationManager.allocationMap[category].debt = Decimal(money)
-					self.allocationManager.allocationMap[category].debtReg = Decimal(money)
+				if mlines[i].strip():
+					category, money = mlines[i].strip().split(',')
+					if category != DEBT_KEY:
+						self.allocationManager.allocationMap[category].extraMoney = Decimal(money)
+					else:
+						self.allocationManager.allocationMap[category].debt = Decimal(money)
+						self.allocationManager.allocationMap[category].debtReg = Decimal(money)
 
 	def _readSavings(self):
 		'''
@@ -103,8 +104,9 @@ class MoneyManager:
 			for i in xrange(len(slines)):
 				if i == 0:
 					continue
-				category, product, percent, priority, savings, totalCost = slines[i].strip().split(',')
-				self.allocationManager.addSubAllocation(cat=category, product=product, percent=percent, priority=priority, savings=savings, totalCost=totalCost)
+				if slines[i].strip():
+					category, product, percent, priority, savings, totalCost = slines[i].strip().split(',')
+					self.allocationManager.addSubAllocation(cat=category, product=product, percent=percent, priority=priority, savings=savings, totalCost=totalCost)
 
 	def _writeMoney(self):
 		with open(self._moneyPath, 'w') as mFile:

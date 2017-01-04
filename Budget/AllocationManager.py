@@ -117,8 +117,9 @@ class AllocationManager:
 			for i in xrange(len(alines)):
 				if i == 0:
 					continue
-				category, percent, priority = alines[i].strip().split(',')
-				self.allocationMap.update({category : Allocation(cat=category, percent=percent, priority=priority)})
+				if alines[i].strip():
+					category, percent, priority = alines[i].strip().split(',')
+					self.allocationMap.update({category : Allocation(cat=category, percent=percent, priority=priority)})
 		self.allocationMap.update({EXTRA_KEY: Allocation(cat=EXTRA_KEY, percent=Decimal("0.00"), priority=(len(self.allocationMap) + 1))})
 		self.allocationMap.update({DEBT_KEY: Allocation(cat=DEBT_KEY, percent=Decimal("0.00"), priority=(len(self.allocationMap) + 1))})
 

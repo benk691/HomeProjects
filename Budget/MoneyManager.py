@@ -45,12 +45,12 @@ class MoneyManager:
 		creditCards = int(raw_input("How many credit cards do you have? "))
 
 		for ba in xrange(bankAccounts):
-			baName = raw_input("What is the name of one of your bank accounts? ")
-			bankAccountMoney += Decimal(raw_input("How much money is in your {0} account? ".format(baName)))
+			bankAccountMoney += Decimal(raw_input("How much money is in your bank account #{0}? ".format(ba)))
 
 		for cc in xrange(creditCards):
-			ccName = raw_input("What is the name of one of your credit card accounts? ")
-			creditAccountMoney += (-1 * Decimal(raw_input("How much money do you owe for your {0} account? ".format(ccName))))
+			creditCap = Decimal(raw_input("What is your credit line for credit card account #{0}? ".format(cc)))
+			availCredit = Decimal(raw_input("What is your available credit for credit card account #{0}? ".format(cc)))
+			creditAccountMoney += (-1 * abs(creditCap - availCredit))
 
 		if bankAccounts > 0 or creditCards > 0:
 			# Calculate your debt before continuing

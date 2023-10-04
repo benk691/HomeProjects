@@ -1,3 +1,3 @@
-import Color
-import Common
-import Menu
+from .Color import *
+from .Common import *
+from .Menu import *

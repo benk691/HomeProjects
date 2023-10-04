@@ -1,1 +1,1 @@
-import General
+from .General import *

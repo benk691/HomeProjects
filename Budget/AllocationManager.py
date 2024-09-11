@@ -47,7 +47,7 @@ class AllocationManager:
 			ErrorMsg("Over deposited amount, you are ${0} in debt!".format(currentAmount))
 
 	def withdraw(self):
-		print "What did you spend money on?"
+		print("What did you spend money on?")
 		choice = self.withdrawMenu.run()
 		if choice != 'q':
 			cat = self.withdrawMenuList[choice - 1]
@@ -63,11 +63,11 @@ class AllocationManager:
 
 	def status(self):
 		totalPercent = Decimal("0.00")
-		print "{0} Status {1}".format('=' * 10, '=' * 10)
+		print("{0} Status {1}".format('=' * 10, '=' * 10))
 		for cat in self.allocationMap:
 			self.allocationMap[cat].status()
 			totalPercent += self.allocationMap[cat].percent
-		print "{0}/100% has been allocated.".format(totalPercent.quantize(TWOPLACES) * 100)
+		print("{0}/100% has been allocated.".format(totalPercent.quantize(TWOPLACES) * 100))
 
 	def update(self):
 		pass
@@ -114,7 +114,7 @@ class AllocationManager:
 	def _readAllocations(self):
 		with open(self._allocationPath, 'r') as aFile:
 			alines = aFile.readlines()
-			for i in xrange(len(alines)):
+			for i in range(len(alines)):
 				if i == 0:
 					continue
 				if alines[i].strip():

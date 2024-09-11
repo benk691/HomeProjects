@@ -18,15 +18,15 @@ class Menu:
 		return self.choose()
 
 	def display(self):
-		print '=' * 10 + ' Menu ' + '=' * 10
-		for i in xrange(len(self.optionList)):
-			print '{0}) {1}'.format(i+1, self.optionList[i][Menu.OPTION_INDEX])
+		print('=' * 10 + ' Menu ' + '=' * 10)
+		for i in range(len(self.optionList)):
+			print('{0}) {1}'.format(i+1, self.optionList[i][Menu.OPTION_INDEX]))
 
 	def choose(self):
 		done = False
 		choice = None
 		while not done:
-			choice = raw_input('Select one of the options or enter "q" to quit: ')
+			choice = input('Select one of the options or enter "q" to quit: ')
 			if choice == 'q':
 				done = True
 			else:
@@ -54,7 +54,7 @@ class Menu:
 
 	def option(self, option):
 		index = -1
-		for i in xrange(len(self.optionList)):
+		for i in range(len(self.optionList)):
 			if self.optionList[i][0] == option:
 				index = i
 		return index

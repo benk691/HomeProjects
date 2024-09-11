@@ -125,7 +125,7 @@ class Allocation:
 			for subAlloc in self.subAllocs:
 				menu.addOption(subAlloc.product, subAlloc.withdraw, amount)
 			menu.addOption("Extra", self._withdrawFromExtra, amount)
-			print "What suballocation did you spend the money on?"
+			print("What suballocation did you spend the money on?")
 			choice = menu.run()
 		else:
 			amount = self._withdrawFromExtra(amount)
@@ -142,15 +142,15 @@ class Allocation:
 
 	def _statusAlloc(self):
 		totalPercent = Decimal("0.00")
-		print "{0} {1} ({2}%) {3}".format('-' * 5, self.category, (self.percent * 100).quantize(TWOPLACES), '-' * 5)
+		print("{0} {1} ({2}%) {3}".format('-' * 5, self.category, (self.percent * 100).quantize(TWOPLACES), '-' * 5))
 		for subAlloc in self.subAllocs:
 			subAlloc.status()
 			totalPercent += subAlloc.percent
 		if self.category != DEBT_KEY:
-			print '\tExtra: ${0}'.format(self.extraMoney.quantize(TWOPLACES))
+			print('\tExtra: ${0}'.format(self.extraMoney.quantize(TWOPLACES)))
 		else:
-			print '\tDebt: ${0}'.format(self.debt.quantize(TWOPLACES))
-		print '\tPercent allocated to savings: {0}/100%'.format((totalPercent * 100).quantize(TWOPLACES))
+			print('\tDebt: ${0}'.format(self.debt.quantize(TWOPLACES)))
+		print('\tPercent allocated to savings: {0}/100%'.format((totalPercent * 100).quantize(TWOPLACES)))
 
 	def _updateAlloc(self):
 		pass
@@ -188,7 +188,7 @@ class Allocation:
 
 	def _statusSubAlloc(self):
 		diff = self.totalCost - self.savings
-		print '\t{0}: ${1} / ${2} (${3} until goal)'.format(self.product, self.savings.quantize(TWOPLACES), self.totalCost.quantize(TWOPLACES), diff.quantize(TWOPLACES))
+		print('\t{0}: ${1} / ${2} (${3} until goal)'.format(self.product, self.savings.quantize(TWOPLACES), self.totalCost.quantize(TWOPLACES), diff.quantize(TWOPLACES)))
 
 	def _updateSubAlloc(self):
 		pass

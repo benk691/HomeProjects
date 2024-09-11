@@ -17,7 +17,7 @@ class MoneyManager:
 		Deposits money according to the percentages of all the allocations
 		'''
 		if amount == None:
-			amount = Decimal(raw_input("How much money to deposit? "))
+			amount = Decimal(input("How much money to deposit? "))
 		self.allocationManager.deposit(amount)
 
 	def withdraw(self, amount=None):
@@ -41,15 +41,15 @@ class MoneyManager:
 		bankAccountMoney = Decimal("0.00")
 		creditAccountMoney = Decimal("0.00")
 		savings = Decimal("0.00")
-		bankAccounts = int(raw_input("How many bank accounts do you have? "))
-		creditCards = int(raw_input("How many credit cards do you have? "))
+		bankAccounts = int(input("How many bank accounts do you have? "))
+		creditCards = int(input("How many credit cards do you have? "))
 
-		for ba in xrange(bankAccounts):
-			bankAccountMoney += Decimal(raw_input("How much money is in your bank account #{0}? ".format(ba)))
+		for ba in range(bankAccounts):
+			bankAccountMoney += Decimal(input("How much money is in your bank account #{0}? ".format(ba)))
 
-		for cc in xrange(creditCards):
-			creditCap = Decimal(raw_input("What is your credit line for credit card account #{0}? ".format(cc)))
-			availCredit = Decimal(raw_input("What is your available credit for credit card account #{0}? ".format(cc)))
+		for cc in range(creditCards):
+			creditCap = Decimal(input("What is your credit line for credit card account #{0}? ".format(cc)))
+			availCredit = Decimal(input("What is your available credit for credit card account #{0}? ".format(cc)))
 			creditAccountMoney += (-1 * abs(creditCap - availCredit))
 
 		if bankAccounts > 0 or creditCards > 0:
@@ -84,7 +84,7 @@ class MoneyManager:
 		'''
 		with open(self._moneyPath, 'r') as mFile:
 			mlines = mFile.readlines()
-			for i in xrange(len(mlines)):
+			for i in range(len(mlines)):
 				if i == 0:
 					continue
 				if mlines[i].strip():
@@ -101,7 +101,7 @@ class MoneyManager:
 		'''
 		with open(self._savingsPath, 'r') as sFile:
 			slines = sFile.readlines()
-			for i in xrange(len(slines)):
+			for i in range(len(slines)):
 				if i == 0:
 					continue
 				if slines[i].strip():
